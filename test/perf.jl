@@ -1,6 +1,11 @@
 module Perf
 using KissThreading
-using KissThreading: tname
+if isdefined(KissThreading, :tname)
+    using KissThreading: tname
+else
+    tname(s::Symbol) = Symbol(:t, s)
+
+end
 using BenchmarkTools
 
 macro race(f, args...)
