@@ -8,7 +8,8 @@ else
 end
 using BenchmarkTools
 
-macro race(f, args...)
+macro race(f, args...; kw...)
+    @show kw
     tf = tname(f)
     tt_call   = :(($tf)($(args...)))
     base_call = :((Base.$f)($(args...)))
