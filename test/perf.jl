@@ -27,6 +27,10 @@ if !isdefined(KissThreading, :tsum)
     tsum(f, data) = tmapreduce(f, +, data, init=zero(eltype(data)))
 end
 
+if !isdefined(KissThreading, :tprod)
+    tprod(f, data) = tmapreduce(f, +, data, init=one(eltype(data)))
+end
+
 if !isdefined(KissThreading, :tminimum)
     tminimum(f, data) = tmapreduce(f, min, data, init=typemax(eltype(data)))
 end
