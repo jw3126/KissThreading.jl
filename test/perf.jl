@@ -4,12 +4,11 @@ if isdefined(KissThreading, :tname)
     using KissThreading: tname
 else
     tname(s::Symbol) = Symbol(:t, s)
-
 end
+
 using BenchmarkTools
 
-macro race(f, args...; kw...)
-    @show kw
+macro race(f, args...)
     tf = tname(f)
     tt_call   = :(($tf)($(args...)))
     base_call = :((Base.$f)($(args...)))
@@ -51,9 +50,13 @@ data = randn(10^5)
 @race(minimum, sin, data)
 @race(maximum, sin, data)
 @race(reduce, atan, data)
-@race(mapreduce, sin, +, data)
 @race(map, sin, data)
 dst = similar(data)
 @race(map!, sin, dst, data)
+try
+    @race(mapreduce, sin, +, data)
+catch err
+    @warn err
+end
 
 end#module
