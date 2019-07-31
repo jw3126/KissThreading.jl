@@ -18,6 +18,22 @@ macro race(f, args...)
     end |> esc
 end
 
+if !isdefined(KissThreading, :tsum)
+    tsum(f, data) = tmapreduce(f, +, data, init=zero(eltype(data)))
+end
+
+if !isdefined(KissThreading, :tminimum)
+    tminimum(f, data) = tmapreduce(f, min, data, init=typemax(eltype(data)))
+end
+
+if !isdefined(KissThreading, :tmaximum)
+    tmaximum(f, data) = tmapreduce(f, max, data, init=typemin(eltype(data)))
+end
+
+if !isdefined(KissThreading, :treduce)
+    treduce(op, data) = tmapreduce(identity, op, data, init=zero(eltype(data)))
+end
+
 @info "Running benchmarks on $(Threads.nthreads()) threads."
 data = randn(10^5)
 @race(sum,     sin, data)
